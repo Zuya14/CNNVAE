@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot name="robot">
+    <link name="origin">]
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value=".0"/>
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+        </inertial>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="-0.75 -1.5 0.5"/>
+            <geometry>
+                <box size="0.3 2 1"/>
+            </geometry>
+        </collision>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="-0.75 1.5 0.5"/>
+            <geometry>
+                <box size="0.3 2 1"/>
+            </geometry>
+        </collision>
+
+        <collision> 
+            <origin rpy="0 0 0" xyz="0.75 -1.5 1"/>
+            <geometry>
+                <box size="0.3 2 2"/>
+            </geometry>
+        </collision>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0.75 1.5 1"/>
+            <geometry>
+                <box size="0.3 2 2"/>
+            </geometry>
+        </collision>
+
+        <collision> 
+            <origin rpy="0 0 0" xyz="2.25 -1.5 1"/>
+            <geometry>
+                <box size="0.3 2 2"/>
+            </geometry>
+        </collision>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="2.25 1.5 1"/>
+            <geometry>
+                <box size="0.3 2 2"/>
+            </geometry>
+        </collision>
+
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 3.75 1.5"/>
+            <geometry>
+                <box size="8 0.5 3"/>
+            </geometry>
+        </collision>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 -3.75 1.5"/>
+            <geometry>
+                <box size="8 0.5 3"/>
+            </geometry>
+        </collision>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="-3.75 0 1.5"/>
+            <geometry>
+                <box size="0.5 7 3"/>
+            </geometry>
+        </collision>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="3.75 0 1.5"/>
+            <geometry>
+                <box size="0.5 7 3"/>
+            </geometry>
+        </collision>
+    </link>
+</robot>

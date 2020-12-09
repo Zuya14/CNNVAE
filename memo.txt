@@ -1,0 +1,30 @@
+python test_VGGcnnout.py --channels 1 64 --latent 18
+
+// distance [0, 1]
+python train_VGGVAE.py --id "test_train0" --epochs 100 --channels 1 64 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+// distance [0, 8]
+python train_VGGVAE.py --id "test_train1" --epochs 100 --channels 1 64 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+// distance [0, 1] lastSigmoid
+python train_VGGVAE.py --id "test_train3" --epochs 100 --channels 1 64 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_VGGVAE.py --id "test_train3" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_VGGVAE.py --id "test_train3" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+// distance [0, 1] lastSigmoid batchnorm
+python train_VGGVAE.py --id "test_train4" --epochs 100 --channels 1 64 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+python train_VGGVAE.py --id "test_train4" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+// distance [0, 1] lastSigmoid batchnorm_half
+python train_VGGVAE.py --id "test_train5" --epochs 100 --channels 1 64 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_VGGVAE.py --id "test_train5" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_VGGVAE.py --id "test_train5" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+// over batchnorm_half
+python train_VGGVAE_single.py --id "over" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_VGGVAE_single.py --id "over" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+// over 
+python train_VGGVAE_single.py --id "over_nobatch" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_VGGVAE_single.py --id "over_nobatch" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
