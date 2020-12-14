@@ -41,12 +41,15 @@ class Episode:
             return self.observations[index:index+L], self.actions[index:index+L], self.rewards[index:index+L], self.dones[index:index+L]
         else:
             return self.observations, self.actions, self.rewards, self.dones
+        
+    def get(self):
+        return self.observations, self.actions, self.rewards, self.dones
 
 class EpisodeMemory:
 
     def __init__(self, mem_size):
         self.mem_size = mem_size
-        self.size = 0
+        self.size = 0 # sum of step
         self.episodes = []
 
     def append(self, episode):
@@ -64,6 +67,9 @@ class EpisodeMemory:
         while self.size > self.mem_size:
             self.size -= self.episodes[0].size()
             del self.episodes[0]
+
+    def get(self, index):
+        return self.episodes[index].get()
 
     def sample(self, n, L):
         indeces = np.random.randint(0, len(self.episodes), n)

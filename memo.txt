@@ -1,4 +1,5 @@
 python test_VGGcnnout.py --channels 1 64 --latent 18
+python test_VGGcnnout.py --channels 1 32 64 128 256 --latent 18
 
 // distance [0, 1]
 python train_VGGVAE.py --id "test_train0" --epochs 100 --channels 1 64 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
@@ -28,3 +29,11 @@ python train_VGGVAE_single.py --id "over" --epochs 100 --channels 1 64 128 256 -
 // over 
 python train_VGGVAE_single.py --id "over_nobatch" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
 python train_VGGVAE_single.py --id "over_nobatch" --epochs 100 --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+python train_VGGVAE_single.py --id "over_nobatch" --epochs 100 --channels 1 64 128 256 512 1024 --cnn-outsize 33792 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+
+
+
+
+python test_VGGVAE.py --id "over_nobatch" --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --sec 0.1 --models "./result-VGGVAE_single/over_nobatch/channels_1_64_128_256_latent_18//vae100.pth"
+python test_VGGVAE.py --id "over_nobatch" --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --sec 0.1 --models "./result-VGGVAE_single/over_nobatch/channels_1_64_128_256_latent_36/vae100.pth"

@@ -114,8 +114,9 @@ if __name__ == '__main__':
         with open(f, newline='') as log_file:
 
             stem = f.stem
-
-            maxLen = 8
+            
+            # maxLen = 8.
+            maxLen = 1.
 
             print("maxLen:"+str(maxLen))
 
@@ -130,8 +131,7 @@ if __name__ == '__main__':
             startDeg = -135. + deg_offset
             endDeg = 135. + deg_offset
             resolusion = 0.25
-            # maxLen = 8.
-            maxLen = 1.
+
 
             # for data in datas[::10]:
             for data in datas:

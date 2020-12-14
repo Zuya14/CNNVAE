@@ -43,8 +43,6 @@ def createDecoderUnitLast(in_chs, out_chs):
         nn.Sigmoid()
         )
 
-
-
 # def createDecoderUnit(in_chs, out_chs):
 #     return nn.Sequential(
 #         nn.ConvTranspose1d(in_chs, out_chs, kernel_size=3, stride=2, padding=1),
@@ -84,7 +82,7 @@ class Encoder(jit.ScriptModule):
         h = x
         for layer in self.layers:
             h = layer(h)
-            # print(h.size())
+            print(h.size())
         h = h.view(-1, self.cnn_outsize)
 
         mu     = self.fc1(h)
@@ -121,11 +119,11 @@ class Decoder(jit.ScriptModule):
         x = self.fc(z)
 
         x = x.view(-1, self.last_channel, int(self.cnn_outsize/self.last_channel))
-        # print(x.size())
+        print(x.size())
 
         for layer in self.layers:
             x = layer(x)
-            # print(x.size())
+            print(x.size())
 
         return x
 
@@ -200,16 +198,24 @@ if __name__ == '__main__':
     # print(dx.size())
 
     latent = 18
+    channels = [1, 64, 128, 256]
     outsize = 34560
 
-    encoder = Encoder(channels=[1, 64, 128, 256], latent_size=latent, cnn_outsize=outsize)
+    # channels = [1, 32, 64, 128, 256]
+    # outsize = 17152
+
+    
+    print("Encoder")
+    encoder = Encoder(channels=channels, latent_size=latent, cnn_outsize=outsize)
     m, s = encoder(x)
     print(m.size())
 
-    decoder = Decoder(channels=list(reversed([1, 64, 128, 256])), latent_size=latent, cnn_outsize=outsize)
+    print("Decoder")
+    decoder = Decoder(channels=list(reversed(channels)), latent_size=latent, cnn_outsize=outsize)
     recon = decoder(m)
     print(recon.size())
 
-    vae = VGGVAE(channels=[1, 64, 128, 256], latent_size=latent, cnn_outsize=outsize)
+    print("VAE")
+    vae = VGGVAE(channels=channels, latent_size=latent, cnn_outsize=outsize)
     recon_x, mu, logvar = vae(x)
     print(recon_x.size())
