@@ -42,10 +42,10 @@ def createNormLastConvT(in_chs, out_chs, **kwargs):
         nn.Sigmoid()
         )
 
-class Encoder(nn.Module):
-# class Encoder(jit.ScriptModule):
+# class Encoder(nn.Module):
+class Encoder(jit.ScriptModule):
 
-    def __init__(self, first_channel, latent_size, batchNorm=False):
+    def __init__(self, first_channel, latent_size, repeat=0, batchNorm=False):
         super().__init__()
 
         if batchNorm:
@@ -55,6 +55,8 @@ class Encoder(nn.Module):
 
         k = first_channel
 
+        self.repeat = repeat
+
         self.conv1 = createConv(   1,    k, kernel_size=3, stride=3, padding=1)
         self.conv2 = createConv(   k,  2*k, kernel_size=3, stride=3, padding=1)
         self.conv3 = createConv( 2*k,  4*k, kernel_size=3, stride=3, padding=1)
@@ -62,6 +64,13 @@ class Encoder(nn.Module):
         self.conv5 = createConv( 8*k, 16*k, kernel_size=3, stride=2, padding=1)
         self.conv6 = createConv(16*k, 32*k, kernel_size=3, stride=2, padding=1)
         
+        self.module1 = nn.Sequential(*[createBasicConv(   k,    k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module2 = nn.Sequential(*[createBasicConv( 2*k,  2*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module3 = nn.Sequential(*[createBasicConv( 4*k,  4*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module4 = nn.Sequential(*[createBasicConv( 8*k,  8*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module5 = nn.Sequential(*[createBasicConv(16*k, 16*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module6 = nn.Sequential(*[createBasicConv(32*k, 32*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+
         # self.conv1 = createConv(   1,    k, kernel_size=3, stride=2, padding=1)
         # self.conv2 = createConv(   k,  2*k, kernel_size=3, stride=2, padding=1)
         # self.conv3 = createConv( 2*k,  4*k, kernel_size=3, stride=2, padding=1)
@@ -76,12 +85,26 @@ class Encoder(nn.Module):
 
     def forward(self, x):
 
-        h = self.conv1(x)
-        h = self.conv2(h)
-        h = self.conv3(h)
-        h = self.conv4(h)
-        h = self.conv5(h)
-        h = self.conv6(h)
+        if self.repeat > 1:
+            h = self.conv1(x)
+            h = self.module1(h)
+            h = self.conv2(h)
+            h = self.module2(h)
+            h = self.conv3(h)
+            h = self.module3(h)
+            h = self.conv4(h)
+            h = self.module4(h)
+            h = self.conv5(h)
+            h = self.module5(h)
+            h = self.conv6(h)
+            h = self.module6(h)
+        else:
+            h = self.conv1(x)
+            h = self.conv2(h)
+            h = self.conv3(h)
+            h = self.conv4(h)
+            h = self.conv5(h)
+            h = self.conv6(h)
 
         h = h.view(-1, self.embedding_size)
 
@@ -91,10 +114,10 @@ class Encoder(nn.Module):
         return mu, logvar
 
 
-class Decoder(nn.Module):
-# class Decoder(jit.ScriptModule):
+# class Decoder(nn.Module):
+class Decoder(jit.ScriptModule):
 
-    def __init__(self, last_channel, latent_size, batchNorm=False):
+    def __init__(self, last_channel, latent_size, repeat=0, batchNorm=False):
         super().__init__()
 
         if batchNorm:
@@ -104,17 +127,19 @@ class Decoder(nn.Module):
             createConvT = createNormConvT
             createLastConvT = createBasicLastConvT
 
+        self.repeat = repeat
+
         k = last_channel
 
         self.embedding_size = 5*32*k
 
         self.fc = nn.Linear(latent_size, self.embedding_size)
 
-        self.convT1 = createConvT(32*k, 16*k, kernel_size=2, stride=2, padding=0)
-        self.convT2 = createConvT(16*k,  8*k, kernel_size=2, stride=2, padding=0)
-        self.convT3 = createConvT( 8*k,  4*k, kernel_size=2, stride=2, padding=0)
-        self.convT4 = createConvT( 4*k,  2*k, kernel_size=3, stride=3, padding=0)
-        self.convT5 = createConvT( 2*k,    k, kernel_size=3, stride=3, padding=0)
+        self.convT1 =     createConvT(32*k, 16*k, kernel_size=2, stride=2, padding=0)
+        self.convT2 =     createConvT(16*k,  8*k, kernel_size=2, stride=2, padding=0)
+        self.convT3 =     createConvT( 8*k,  4*k, kernel_size=2, stride=2, padding=0)
+        self.convT4 =     createConvT( 4*k,  2*k, kernel_size=3, stride=3, padding=0)
+        self.convT5 =     createConvT( 2*k,    k, kernel_size=3, stride=3, padding=0)
         self.convT6 = createLastConvT(   k,    1, kernel_size=3, stride=3, padding=0)
 
         # self.convT1 = createConvT(32*k, 16*k, kernel_size=3, stride=3, padding=0)
@@ -124,28 +149,56 @@ class Decoder(nn.Module):
         # self.convT5 = createConvT( 2*k,    k, kernel_size=2, stride=2, padding=0)
         # self.convT6 = createLastConvT(   k,    1, kernel_size=2, stride=2, padding=0)
 
+        # self.convT1 = createConvT(32*k, 16*k, kernel_size=4, stride=2, padding=1)
+        # self.convT2 = createConvT(16*k,  8*k, kernel_size=4, stride=2, padding=1)
+        # self.convT3 = createConvT( 8*k,  4*k, kernel_size=4, stride=2, padding=1)
+        # self.convT4 = createConvT( 4*k,  2*k, kernel_size=5, stride=3, padding=1)
+        # self.convT5 = createConvT( 2*k,    k, kernel_size=5, stride=3, padding=1)
+        # self.convT6 = createLastConvT(   k,    1, kernel_size=5, stride=3, padding=1)
+
+        self.module1 = nn.Sequential(*[createBasicConvT(32*k, 32*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module2 = nn.Sequential(*[createBasicConvT(16*k, 16*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module3 = nn.Sequential(*[createBasicConvT( 8*k,  8*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module4 = nn.Sequential(*[createBasicConvT( 4*k,  4*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module5 = nn.Sequential(*[createBasicConvT( 2*k,  2*k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+        self.module6 = nn.Sequential(*[createBasicConvT(   k,    k, kernel_size=3, padding=1) for _ in range(self.repeat)])
+
     def forward(self, z):
 
         x = self.fc(z)
 
         x = x.view(-1, self.embedding_size//5, 5)
 
-        x = self.convT1(x)
-        x = self.convT2(x)
-        x = self.convT3(x)
-        x = self.convT4(x)
-        x = self.convT5(x)
-        x = self.convT6(x)
+        if self.repeat > 1:
+            x = self.module1(x)
+            x = self.convT1(x)
+            x = self.module2(x)
+            x = self.convT2(x)
+            x = self.module3(x)
+            x = self.convT3(x)
+            x = self.module4(x)
+            x = self.convT4(x)
+            x = self.module5(x)
+            x = self.convT5(x)
+            x = self.module6(x)
+            x = self.convT6(x)
+        else:
+            x = self.convT1(x)
+            x = self.convT2(x)
+            x = self.convT3(x)
+            x = self.convT4(x)
+            x = self.convT5(x)
+            x = self.convT6(x)
 
         return x
 
 # class CNNVAE(nn.Module):
 class CNNVAE(jit.ScriptModule):
 
-    def __init__(self, first_channel, latent_size, batchNorm=False):
+    def __init__(self, first_channel, latent_size, repeat=0, batchNorm=False):
         super().__init__()
-        self.encoder = Encoder(first_channel, latent_size, batchNorm)
-        self.decoder = Decoder(first_channel, latent_size, batchNorm)
+        self.encoder = Encoder(first_channel, latent_size, repeat, batchNorm)
+        self.decoder = Decoder(first_channel, latent_size, repeat, batchNorm)
 
     def forward(self, x):
         mu, logvar = self.encoder(x)
@@ -268,14 +321,14 @@ if __name__ == '__main__':
     # testDecode()
 
 
-    encoder = Encoder(first_channel=8, latent_size=18)
+    encoder = Encoder(first_channel=8, latent_size=18, repeat=3)
 
     x = torch.randn(10,1,1080)
     mu, sigma = encoder(x)
 
     print(mu.size())
 
-    decoder = Decoder(last_channel=8, latent_size=18)
+    decoder = Decoder(last_channel=8, latent_size=18, repeat=3)
 
     recon = decoder(mu)
 

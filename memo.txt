@@ -38,6 +38,7 @@ python train_VGGVAE_single.py --id "over_nobatch" --epochs 100 --channels 1 64 1
 python test_VGGVAE.py --id "over_nobatch" --channels 1 64 128 256 --cnn-outsize 34560 --latent 18 --sec 0.1 --models "./result-VGGVAE_single/over_nobatch/channels_1_64_128_256_latent_18//vae100.pth"
 python test_VGGVAE.py --id "over_nobatch" --channels 1 64 128 256 --cnn-outsize 34560 --latent 36 --sec 0.1 --models "./result-VGGVAE_single/over_nobatch/channels_1_64_128_256_latent_36/vae100.pth"
 
+// CNNVAE
 
 python train_CNNVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
 python train_CNNVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --batchnorm
@@ -48,3 +49,14 @@ python train_CNNVAE_single.py --id "test_train0_PARAM" --epochs 100 --first-chan
 
 python test_CNNVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-CNNVAE_single/test_train0/first_channel_8_latent_18/vae100.pth"
 python test_CNNVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-CNNVAE_single/test_train0/first_channel_8_latent_18_bn/vae100.pth" --batchnorm
+
+// Decoder非対称
+python train_CNNVAE_single.py --id "test_train1" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_CNNVAE_single.py --id "test_train1" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --batchnorm
+
+python test_CNNVAE.py --id "test_train1" --first-channel 8 --latent 18 --sec 0.1 --models "./result-CNNVAE_single/test_train1/first_channel_8_latent_18/vae100.pth"
+python test_CNNVAE.py --id "test_train1" --first-channel 8 --latent 18 --sec 0.1 --models "./result-CNNVAE_single/test_train1/first_channel_8_latent_18_bn/vae100.pth" --batchnorm
+
+// repeat 普通ver
+python train_CNNVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --repeat 1
+python train_CNNVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --repeat 1 --batchnorm

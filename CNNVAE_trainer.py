@@ -7,8 +7,8 @@ from CNNVAE import CNNVAE
 
 class CNNVAE_trainer:
 
-    def __init__(self, first_channel, latent_size, batchNorm=False, device='cpu'):
-        self.vae = CNNVAE(first_channel, latent_size, batchNorm)
+    def __init__(self, first_channel, latent_size, repeat=0, batchNorm=False, device='cpu'):
+        self.vae = CNNVAE(first_channel, latent_size, repeat, batchNorm)
         self.vae = self.vae.to(device)
         self.device = device
 
