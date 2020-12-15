@@ -109,6 +109,26 @@ class DecoderInceptionBasic(nn.Module):
 
         return out
 
+
+class Encoder(nn.Module):
+
+    def __init__(self, latent_size, cnn_outsize):
+        super().__init__()
+
+        assert len(channels) >= 2
+
+        self.cnn_outsize = cnn_outsize
+
+        layer = []
+        for i in range(len(channels)-1):
+            layer.append(createEncoderUnit(channels[i], channels[i+1]))
+            # layer.extend(createEncoderUnit(channels[i], channels[i+1]).children())
+        
+        self.layers = nn.ModuleList(layer)
+
+        self.fc1 = nn.Linear(cnn_outsize, latent_size)
+        self.fc2 = nn.Linear(cnn_outsize, latent_size)
+
 if __name__ == '__main__':
 
     x = torch.randn(10,1,1080)
