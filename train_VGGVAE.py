@@ -208,6 +208,7 @@ if __name__ == '__main__':
             if epoch % (num_epochs//10) == 0:
                 vae_train.save(out_dir+'/vae{}.pth'.format(epoch))
                 
+                vae_train.vae.eval()
                 data = memory.sample2(n=args.test_batch_size, L=args.chunk_size)[0].to(device)
                 data = data.to(device).view(-1, 1, 1080)
                 recon_x, mu, logvar = vae_train.vae(data)

@@ -83,6 +83,7 @@ if __name__ == '__main__':
     parser.add_argument("--init-episode", type=int, default=1)
     parser.add_argument("--min_step", type=int, default=10)
 
+    parser.add_argument("--repeat", type=int, default=0)
     parser.add_argument("--first-channel", type=int, default=8)
     # parser.add_argument("--channels", nargs="*", type=int, default=[1, 64])
     # parser.add_argument("--cnn-outsize", type=int)
@@ -117,6 +118,9 @@ if __name__ == '__main__':
 
     if args.batchnorm:
         out_dir += '_bn'
+
+    if args.repeat > 0:
+        out_dir += '/repeat{}'.format(args.repeat)
 
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
@@ -158,7 +162,7 @@ if __name__ == '__main__':
 
     num_epochs = args.epochs
 
-    vae_train =  CNNVAE_trainer(args.first_channel, args.latent, batchNorm=args.batchnorm, device=device)
+    vae_train =  CNNVAE_trainer(args.first_channel, args.latent, repeat=args.repeat, batchNorm=args.batchnorm, device=device)
 
     if args.models != '' and os.path.exists(args.models):
         print("load:", args.models)
@@ -166,6 +170,8 @@ if __name__ == '__main__':
     else:
         exit()
 
+    vae_train.vae.eval()
+    
     for index in range(len(memory.episodes)):
         datas_observations = torch.tensor(memory.get(index)[0]).float()
         print(datas_observations.size())

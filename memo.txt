@@ -60,3 +60,26 @@ python test_CNNVAE.py --id "test_train1" --first-channel 8 --latent 18 --sec 0.1
 // repeat 普通ver
 python train_CNNVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --repeat 1
 python train_CNNVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --repeat 1 --batchnorm
+
+
+
+
+
+
+// InceptionVAE
+
+python train_InceptionVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 
+python train_InceptionVAE_single.py --id "test_train0" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --repeat 1
+
+// １層Inception追加
+python train_InceptionVAE_single.py --id "test_train1" --epochs 100 --first-channel 8 --latent 18 --init-episode 10 --threads 10  --collect-interval 10 --batch-size 8 --sec 0.1 --repeat 1
+
+
+python test_CNNVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-CNNVAE_single/test_train0/first_channel_8_latent_18/vae100.pth"
+python test_CNNVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-CNNVAE_single/test_train0/first_channel_8_latent_18/repeat1/vae100.pth" --repeat 1
+
+python test_InceptionVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-InceptionVAE_single/test_train0/first_channel_8_latent_18/vae100.pth"
+python test_InceptionVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-InceptionVAE_single/test_train0/first_channel_8_latent_18/repeat1/vae100.pth" --repeat 1
+
+python test_InceptionVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-InceptionVAE_single/test_train0/first_channel_8_latent_18_bn/vae100.pth" --batchnorm
+python test_InceptionVAE.py --id "test_train0" --first-channel 8 --latent 18 --sec 0.1 --models "./result-InceptionVAE_single/test_train0/first_channel_8_latent_18_bn/repeat1/vae100.pth" --repeat 1 --batchnorm

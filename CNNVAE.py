@@ -16,6 +16,7 @@ def createNormConv(in_chs, out_chs, **kwargs):
         nn.ReLU(inplace=True)
         )
 
+
 def createBasicConvT(in_chs, out_chs, **kwargs):
     return nn.Sequential(
         nn.ConvTranspose1d(in_chs, out_chs, **kwargs),
@@ -28,6 +29,7 @@ def createNormConvT(in_chs, out_chs, **kwargs):
         nn.BatchNorm1d(out_chs),
         nn.ReLU(inplace=True)
         )
+
 
 def createBasicLastConvT(in_chs, out_chs, **kwargs):
     return nn.Sequential(
@@ -49,9 +51,9 @@ class Encoder(jit.ScriptModule):
         super().__init__()
 
         if batchNorm:
-            createConv = createBasicConv
-        else:
             createConv = createNormConv
+        else:
+            createConv = createBasicConv
 
         k = first_channel
 
@@ -85,7 +87,7 @@ class Encoder(jit.ScriptModule):
 
     def forward(self, x):
 
-        if self.repeat > 1:
+        if self.repeat > 0:
             h = self.conv1(x)
             h = self.module1(h)
             h = self.conv2(h)
@@ -121,10 +123,10 @@ class Decoder(jit.ScriptModule):
         super().__init__()
 
         if batchNorm:
-            createConvT = createBasicConvT
+            createConvT = createNormConvT
             createLastConvT = createBasicLastConvT
         else:
-            createConvT = createNormConvT
+            createConvT = createBasicConvT
             createLastConvT = createBasicLastConvT
 
         self.repeat = repeat
@@ -169,7 +171,7 @@ class Decoder(jit.ScriptModule):
 
         x = x.view(-1, self.embedding_size//5, 5)
 
-        if self.repeat > 1:
+        if self.repeat > 0:
             x = self.module1(x)
             x = self.convT1(x)
             x = self.module2(x)

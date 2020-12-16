@@ -164,6 +164,8 @@ if __name__ == '__main__':
     else:
         exit()
 
+    vae_train.vae.eval()
+
     for index in range(len(memory.episodes)):
         datas_observations = torch.tensor(memory.get(index)[0]).float()
         print(datas_observations.size())
